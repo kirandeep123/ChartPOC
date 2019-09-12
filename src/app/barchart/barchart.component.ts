@@ -1,23 +1,23 @@
-import { Component, NgZone } from "@angular/core";
+import { Component, NgZone, OnInit } from "@angular/core";
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 
 am4core.useTheme(am4themes_animated);
+
 @Component({
-  selector: "app-root",
-  templateUrl: "./app.component.html",
-  styleUrls: ["./app.component.scss"]
+  selector: "app-barchart",
+  templateUrl: "./barchart.component.html",
+  styleUrls: ["./barchart.component.scss"]
 })
-export class AppComponent {
-  title = "linechart";
+export class BarchartComponent implements OnInit {
   private chart: am4charts.XYChart;
+
   constructor(private zone: NgZone) {}
 
-  ngAfterViewInit(): void {
-    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
+  ngOnInit() {
     this.zone.runOutsideAngular(() => {
-      let chart = am4core.create("linechart", am4charts.XYChart);
+      let chart = am4core.create("barchart", am4charts.XYChart);
       let title = chart.titles.create();
       title.text = "Line charts POC ";
       let data = [
@@ -53,21 +53,24 @@ export class AppComponent {
         }
       ];
       chart.data = data;
-
-      //setting the x-axis
+      // Create x axis
       let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
-      categoryAxis.title.text = "Area";
       categoryAxis.dataFields.category = "area";
+      categoryAxis.title.text = "Area";
+      categoryAxis.renderer.grid.template.location = 0;
+      categoryAxis.renderer.minGridDistance = 20;
+      categoryAxis.renderer.cellStartLocation = 0.1;
+      categoryAxis.renderer.cellEndLocation = 0.9;
 
-      //setting the y axis
-      let valueAxisY = chart.yAxes.push(new am4charts.ValueAxis());
-      valueAxisY.title.text = "sales";
-      valueAxisY.renderer.minWidth = 20;
+      //create y axis
+      let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+      valueAxis.min = 0;
+      valueAxis.title.text = "Sales";
 
       // getting the data and making charts accordingly
       let seriesNames = ["computers", "cars", "boats"];
       for (let i = 0; i < 3; i++) {
-        let series = chart.series.push(new am4charts.LineSeries());
+        let series = chart.series.push(new am4charts.ColumnSeries());
         series.dataFields.categoryX = "area";
         series.dataFields.valueY = seriesNames[i];
         series.name = seriesNames[i];
@@ -81,14 +84,6 @@ export class AppComponent {
 
       chart.legend = new am4charts.Legend();
       this.chart = chart;
-    });
-  }
-  ngOnDestroy(): void {
-    //Called once, before the instance is destroyed.
-    this.zone.runOutsideAngular(() => {
-      if (this.chart) {
-        this.chart.dispose();
-      }
     });
   }
 }
