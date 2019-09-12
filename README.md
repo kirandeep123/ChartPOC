@@ -1,4 +1,10 @@
 # Linechart
+
+[
+<img width="1568" alt="Screenshot 2019-09-12 at 4 13 07 PM" src="https://user-images.githubusercontent.com/31850870/64778012-da7e1a80-d578-11e9-8db0-c54885caa0e0.png">
+](url)
+
+
 # Barchart
 # Mapchart
 
@@ -19,6 +25,3 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 
 
 
-# LintChartPOC
-# MapandBarChartPOC
-# MapandBarChartPOC
